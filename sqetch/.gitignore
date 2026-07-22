@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+.eggs/
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# CUDA / extension artifacts
+*.cubin
+*.fatbin
+*.ptx
+*.o
+*.obj
+.cuda_cache/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Local JIT caches (sqetch builds into /tmp by default, but be safe)
+sqetch_ext_*/
