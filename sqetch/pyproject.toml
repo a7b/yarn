@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sqetch"
+version = "0.1.0"
+description = "GPU random-information-set decoder for CSS quantum-code distance estimation"
+authors = [{name = "Muzhou Ma"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["quantum", "error-correction", "CSS", "distance", "GPU", "CUDA"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=1.23",
+]
+
+[project.optional-dependencies]
+gpu = ["torch>=2.1"]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/Muzhou-Ma/sqetch"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+sqetch = ["kernels/*.cu", "py.typed"]
