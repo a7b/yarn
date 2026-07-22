@@ -96,20 +96,6 @@ opt-in shared-memory ceiling; if the requested `k_sub` exceeds the
 shared-memory budget for your `n`, `estimate_distance` raises a
 `ValueError` reporting the maximum that fits.
 
-## Citation
-
-If you use sqetch, please cite both this package and the QDistRnd
-algorithm that it implements on the GPU:
-
-```bibtex
-@software{ma_sqetch_2026,
-  author  = {Ma, Muzhou},
-  title   = {sqetch: GPU random information-set decoder for CSS quantum-code distance estimation},
-  year    = {2026},
-  version = {0.1.0},
-}
-```
-
 ## License
 
 MIT. See `LICENSE`.
