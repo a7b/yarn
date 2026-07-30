@@ -2,6 +2,8 @@
 
 Supporting assets and concrete instances for high-rate qLDPC processor discovery pipeline.
 
+Code base for paper: upcoming
+
 ## Contents
 
 - **[`sqetch/`](sqetch/)** — GPU random information-set decoder for
