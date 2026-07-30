@@ -1,0 +1,46 @@
+# Quickstart: abelian LP code search over C10, shape 1x2, using the
+# two-stage weight-pattern enumeration (abelian-only).
+#
+#   python -m search.runners.search quickstart_abelian.yaml
+#
+# Runs in ~15 s on CPU (needs GAP + the `ldpc` package). Stage 1 samples
+# integer weight matrices W in [1, 3]^(1x2); stage 2 places random ring
+# elements into the surviving patterns. For abelian groups only side A is
+# sampled — pairing sets B = A* (elementwise conjugate). Saves the first 3
+# quantum codes with estimated dx, dz >= 4 — [[50, 10]] codes whose distance
+# is exactly 4 (brute-force verified for the seeded run).
+
+shape: [1, 2]
+group:
+  gap_expr: CyclicGroup(10)
+  tag: C10
+run_stages: [classical, pairing, report]
+
+classical:
+  # Abelian flavor: enumerate weight PATTERNS first, then fill with ring
+  # elements (weight_A/weight_B are the non-abelian alternative).
+  weight_pattern:
+    entry_min: 1              # 1 = forbid empty entries
+    entry_max: 3
+    num_weight_samples: 20    # stage-1 draws of W
+    ring_samples_per_weight: 10
+  sampling:
+    total_samples: 0          # unused by the pattern path (kept for schema)
+    seed: 42
+  distance:
+    d_target: 4
+    num_trials: 300
+
+pairing:
+  bposd:
+    d_target: 4
+    num_trials: 1000
+  pool:
+    max_pairs: 200            # stop after this many (A, B) attempts...
+    min_quantum_pool_size: 3  # ...or once the pool holds 3 (previous runs count)
+
+report:
+  auto_report: false
+
+results_dir: search_results
+verbose: false

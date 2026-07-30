@@ -1,0 +1,37 @@
+# Canonical search demo: shape-(1,2) LP codes with a clean single-orbit
+# canonical logical basis at distance 4, over one explicitly named group.
+#
+#   python -m search.runners.search canonical_sample.yaml
+#
+# Needs GAP (to construct the group) + a CUDA GPU (sqetch screens).
+# Runs in ~20 s: D8 yields [[40, 8]] codes with estimated dx = dz = 4.
+#
+# `mode: canonical` runs the randomized, budgeted canonical-basis funnel of
+# search/canonical/ instead of the sample->filter->pair pipeline, for the
+# ONE group named below — one config = one group; to search several
+# groups, write several configs. The `params:` section maps 1:1 onto the
+# funnel's knob dataclass (SweepParams) — see
+# search/canonical/sample_search.py for every knob's default.
+#
+# Scaling up (a real search shape): pick your group (e.g.
+# group: SmallGroup(84,11)), set target: 16, and drop the small-budget
+# overrides below (the SweepParams defaults — 1M classical / 5M quantum
+# trials, 100k draw budgets — are the real-campaign values). Expect hours
+# per group on one GPU.
+
+mode: canonical
+out_dir: canonical_results
+
+group: SmallGroup(8,3)        # D8 — one GAP expression per config
+
+params:                       # SweepParams overrides (demo-sized budgets)
+  target: 4                   # distance target T
+  cl_num_trials: 200000       # classical sqetch screen trials (default 1M)
+  q_num_trials: 500000        # quantum sqetch screen trials (default 5M)
+  surv_cap: 40                # classical survivor pool cap per side
+  cl_sample_budget: 4000      # max classical draws per side
+  cl_barren_skip: 4000        # 0 survivors after this many draws => skip
+  pair_budget: 400            # max quantum pair tests
+  pair_fail: 300              # 0 passers after this many tests => fail
+  max_pass: 2                 # stop at this many passers
+  seed: 7

@@ -1,0 +1,43 @@
+# Quickstart: non-abelian LP code search over S3, shape 1x2.
+#
+#   python -m search.runners.search quickstart_nonabelian.yaml
+#
+# Runs in ~15 s on CPU (needs GAP + the `ldpc` package). Samples random
+# weight-3 ring matrices over S3, keeps classical sides with d >= 4, pairs
+# them into quantum CSS codes, and saves the first 3 with estimated
+# dx, dz >= 3 — [[30, 6]] codes with true distance 3 (brute-force verified
+# for the seeded run). Outputs land under
+# search_results/S3/1x2/{classical_A,classical_B,quantum,report.md}.
+#
+# Rerunning CONTINUES the search (saved pools and tried pairs are skipped).
+
+shape: [1, 2]                 # (ma, na): A and B are both ma x na ring matrices
+group:
+  gap_expr: SymmetricGroup(3) # any GAP group expression
+  tag: S3                     # short filename-safe tag (auto-derived if omitted)
+run_stages: [classical, pairing, report]
+
+classical:
+  # Non-abelian flavor: fixed per-entry weights for the A and B ring matrices.
+  weight_A: [[3, 3]]
+  weight_B: [[3, 3]]
+  sampling:
+    total_samples: 100        # random draws per side
+    seed: 42                  # fixed seed -> reproducible pool
+  distance:
+    d_target: 4               # keep classical codes with estimated d >= 4 (BP+OSD)
+    num_trials: 300
+
+pairing:
+  bposd:
+    d_target: 3               # keep quantum codes with estimated dx, dz >= 3
+    num_trials: 1000
+  pool:
+    max_pairs: 200            # stop after this many (A, B) attempts...
+    min_quantum_pool_size: 3  # ...or once the pool holds 3 (previous runs count)
+
+report:
+  auto_report: false          # report runs because it is listed in run_stages
+
+results_dir: search_results   # relative to the working directory
+verbose: false

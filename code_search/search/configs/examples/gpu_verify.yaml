@@ -1,0 +1,50 @@
+# GPU verify: the non-abelian quickstart + a sqetch confirmation pass.
+#
+#   python -m search.runners.search gpu_verify.yaml
+#
+# Needs a CUDA GPU (and `torch` + the `sqetch` package) on top of the
+# quickstart requirements; runs in ~1 min including kernel JIT. The BP+OSD
+# screen is deliberately cheap and OPTIMISTIC — a code it passes at
+# d_target may really have lower distance (a miss just means "no lighter
+# logical found in the budget"). Enabling `sqetch_verify` re-checks every
+# screen-passer with a much larger GPU trial budget and refutes the
+# over-optimistic ones; only codes that survive BOTH are saved (their
+# filenames carry the sqetch trial count).
+
+shape: [1, 2]
+group:
+  gap_expr: SymmetricGroup(3)
+  tag: S3
+run_stages: [classical, pairing, report]
+
+classical:
+  weight_A: [[3, 3]]
+  weight_B: [[3, 3]]
+  sampling:
+    total_samples: 100
+    seed: 42
+  distance:
+    d_target: 4
+    num_trials: 300
+
+pairing:
+  bposd:
+    d_target: 3
+    num_trials: 1000
+  sqetch_verify:
+    enabled: true
+    d_target: 3               # confirmation threshold (usually = bposd.d_target)
+    num_trials: 200000        # GPU trials are cheap — be thorough
+    devices: null             # null = all visible CUDA devices
+    strategy: auto            # auto | direction_split | trial_split
+    k_sub: 64                 # sketch dimension (clamped to the kernel dim)
+    batch_size: 50000
+  pool:
+    max_pairs: 200            # stop after this many (A, B) attempts...
+    min_quantum_pool_size: 3  # ...or once the pool holds 3 (previous runs count)
+
+report:
+  auto_report: false
+
+results_dir: search_results
+verbose: false
