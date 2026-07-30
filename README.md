@@ -1,4 +1,4 @@
-# qLDPC processor
+# yarn
 
 Supporting assets and concrete instances for high-rate qLDPC processor discovery pipeline.
 
