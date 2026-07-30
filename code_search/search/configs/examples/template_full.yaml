@@ -1,0 +1,115 @@
+# ============================================================================
+# FULL TEMPLATE — every knob of the search pipeline, annotated.
+#
+#   python -m search.runners.search my_run.yaml
+#
+# This file loads as-is (non-abelian flavor). Lines marked "abelian only"
+# show the alternative flavor; swap the weight spec and uncomment them when
+# your group is abelian. For a skeleton tailored to YOUR group (only the
+# applicable knobs, correct defaults), generate one instead:
+#
+#   python -m search.runners.new_config "SmallGroup(20,3)" 1 2 -o my_run.yaml
+#
+# Semantics worth knowing:
+# - Distances are ESTIMATES (upper bounds): a stage's d_target keeps a code
+#   when the estimator found nothing lighter — PASS means "no logical below
+#   d_target found in the budget", and None (nothing found at all) also
+#   passes. Screens are optimistic by design; enable sqetch_verify (GPU) to
+#   refute over-optimistic passes with a much larger budget.
+# - Reruns continue a search: saved classical pools are reused and
+#   already-tried pairs are skipped (delete results_dir to start over).
+# - Every saved JSON embeds provenance: the config path, entry point, and
+#   git commit that produced it.
+# ============================================================================
+
+shape: [1, 2]                  # (ma, na) ring-matrix shape
+group:
+  gap_expr: SmallGroup(20,3)   # any GAP expression: SymmetricGroup(4),
+                               #   DirectProduct(CyclicGroup(5), SymmetricGroup(3)), ...
+  tag: SmallGroup_20_3         # filename-safe tag; auto-derived if omitted
+run_stages: [classical, pairing, report]   # any subset, run in this order
+
+classical:
+  # ---- weight spec: EXACTLY ONE of the two flavors -----------------------
+  # Non-abelian flavor: fixed per-entry weights (0 disables an entry).
+  weight_A: [[3, 3]]           # ma x na
+  weight_B: [[3, 3]]
+  # Abelian flavor: two-stage weight-pattern enumeration (delete weight_A/B).
+  # weight_pattern:
+  #   entry_min: 0             # 1 forbids empty entries
+  #   entry_max: 3
+  #   num_weight_samples: 100  # stage-1 integer matrices W to try
+  #   ring_samples_per_weight: 10
+  #   max_row_weight: null     # pattern-level caps / filters
+  #   max_col_weight: null
+  #   min_base_girth_bound: null
+  #   min_weight_distance_bound: null   # ma=1 only
+
+  sampling:                    # per-entry ring-element sampling
+    total_samples: 1000        # draws per side (unused by weight_pattern)
+    seed: 42                   # null = OS entropy
+    include_identity: true     # force identity into every entry's support
+    min_element_order: 1       # 1 = no constraint
+    avoid_same_coset: false    # non-abelian only: distinct commutator cosets
+    max_tries: 1000            # rejection-sampling budget per element
+    canonicalize: true         # canonicalize entries (dedupes equivalent draws)
+
+  filters:                     # cheap rejections BEFORE the distance stage
+    min_girth_tanner_A_bin: null        # Tanner-graph girth of the binary lift
+    require_any_block_col_full_rank: false  # some block-col invertible
+                               # (needed later for a canonical basis; NOTE:
+                               #  impossible at weights with no units, e.g.
+                               #  weight-3 over S3)
+    max_canonical_logical_weight: null  # prune heavy canonical logicals
+    min_entry_order_bound: null         # ma=1 only
+    min_abelianization_bound: null      # ma=1, non-abelian only
+    # min_base_girth_bound: null        # abelian only
+    # min_weight_distance_bound: null   # abelian only
+    # min_ring_distance_bound: null     # abelian only
+
+  distance:                    # classical screen: d(ker A_bin) via BP+OSD (CPU)
+    d_target: 6                # keep sides with estimated d >= this
+    num_trials: 2000
+    n_workers: 1               # 1 = inline (no process-pool spawn overhead);
+                               # >1 = process pool, pays off for large n
+    osd_order: 5               # use 0 for very small n (library limitation)
+
+  pool:                        # reuse semantics across reruns
+    min_pool_size: 0           # skip a weight if pool already has >= this many
+    max_saved: 0               # 0 = no cap; else cap on TOTAL pool per weight
+    force_new: false           # ignore min_pool_size and sample anyway
+
+pairing:                       # omit this whole section for classical-only runs
+  bposd:                       # quantum screen (CPU): estimates (dx, dz)
+    d_target: 6
+    num_trials: 2000
+    n_workers: 1
+    osd_order: 0
+  sqetch_verify:               # optional GPU confirmation of screen-passers
+    enabled: false
+    d_target: null             # null = reuse bposd.d_target
+    num_trials: 100000
+    devices: null              # null = all visible CUDA devices
+    strategy: auto             # auto | direction_split | trial_split
+    k_sub: 64                  # sketch dimension (clamped to the kernel dim)
+    batch_size: 50000
+  filters:                     # cheap pair rejections BEFORE building Hx/Hz
+    require_same_group: true
+    require_same_shape: true
+    min_classical_distance: null   # both sides' recorded d must reach this
+    min_classical_girth: null
+    max_Hx_check_weight: null      # stabilizer-weight caps
+    max_Hz_check_weight: null
+    min_full_extractor_bridge_d: null  # C5-relaxed bridge-length filter
+  pool:
+    pair_mode: full_pool       # ("new_only" is not implemented yet)
+    max_pairs: null            # null = no cap on pair attempts (a full
+                               # cross-product can be huge — consider a cap)
+    min_quantum_pool_size: 0   # stop once the pool holds this many codes,
+                               # counting previous runs' saves (0 = never)
+
+report:
+  auto_report: false           # also emit report.md right after pairing
+
+results_dir: search_results    # outputs: results_dir/<tag>/<ma>x<na>/...
+verbose: false                 # true = one progress line per saved code
