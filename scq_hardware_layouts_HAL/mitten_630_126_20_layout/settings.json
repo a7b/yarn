@@ -1,0 +1,30 @@
+{
+    "grid_size": 200,
+    "grid_size_x": 200,
+    "grid_size_y": 200,
+    "custom_positions": null,
+    "layout": "community",
+    "mps_edge_order": "length_asc",
+    "place_margin": 0.02,
+    "node_expansion_val": 0,
+    "toric_code": null,
+    "max_bump_transitions_per_coupler": 10,
+    "max_tsvs_per_coupler": null,
+    "max_coupler_length": 1000,
+    "route_edge_order": "sum_degrees_desc",
+    "edge_expansion_val": 0,
+    "save": true,
+    "verbose": false,
+    "baseline_defaults": {
+        "num_tiers": 1.0,
+        "avg_coupler_length": 1.0,
+        "max_avg_face_switches": 0.0,
+        "avg_tsvs_per_edge": 0.0
+    },
+    "bad_defaults": {
+        "num_tiers": 5.0,
+        "avg_coupler_length": 10.0,
+        "max_avg_face_switches": 4.0,
+        "avg_tsvs_per_edge": 3.0
+    }
+}

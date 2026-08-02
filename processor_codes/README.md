@@ -18,7 +18,7 @@ processor_codes/
 │           ├── XX.npz      ZZ.npz       # joint two-logical measurements
 │           ├── Y.npz                    # Y-logical measurement (non-CSS merge)
 │           └── full_extractor.npz       # extractor-augmented stabilizer spec
-├── mitten_structured/      # 6 codes, matrices only
+├── structured_mitten/      # 6 codes, matrices only
 └── abelian_poly_LP/        # 1 code, matrices only
 ```
 
@@ -27,7 +27,7 @@ Codes:
 | Family | Codes |
 |---|---|
 | `mitten` | [[150,30,10]], [[200,40,12]], [[300,60,14]], [[500,100,16]], [[540,108,18]], [[630,126,20]], [[780,156,22]], [[975,195,24]] |
-| `mitten_structured` | [[300,60,9]], [[330,66,12]], [[600,120,14]], [[600,120,16]], [[840,168,18]], [[1200,240,20]] |
+| `structured_mitten` | [[300,60,9]], [[330,66,12]], [[600,120,14]], [[600,120,16]], [[840,168,18]], [[1200,240,20]] |
 | `abelian_poly_LP` | [[560,112,14]] |
 
 ## Code files

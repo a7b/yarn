@@ -1,0 +1,2 @@
+avg_route_length,max_face_switches,avg_face_switches,num_edges,edge_density,routed_edge_order,switch_edges
+84.0,0,0.0,1,0.14285714285714285,"[(Node(index=399, is_data=True), Node(index=460, is_data=False))]","{(Node(index=399, is_data=True), Node(index=460, is_data=False)): []}"

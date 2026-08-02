@@ -1,0 +1,2 @@
+num_tiers,avg_coupler_length,max_avg_face_switches,avg_tsvs_per_edge,num_tiers_norm,avg_coupler_length_norm,max_avg_face_switches_norm,avg_tsvs_per_edge_norm,hardware_complexity
+10.0,13.191892942994887,4.973607038123167,7.113285660519383,2.25,1.3546547714438764,1.2434017595307918,2.3710952201731277,2.8047879377869487

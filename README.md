@@ -17,7 +17,7 @@ Code base for paper: upcoming
 - **[`processor_codes/`](processor_codes/)** — the finalized rate-1/5 code
   suite: `mitten` (eight codes, [[150,30,10]] through [[975,195,24]], each
   with logical-measurement gadgets and the full-extractor stabilizer
-  specification), `mitten_structured` (six codes), and `abelian_poly_LP`
+  specification), `structured_mitten` (six codes), and `abelian_poly_LP`
   (one code). File conventions in
   [`processor_codes/README.md`](processor_codes/README.md).
 - **[`SE_cycle_movies/`](SE_cycle_movies/)** — animations of full
@@ -26,4 +26,4 @@ Code base for paper: upcoming
 
 ## Coming soon
 
-- The **Telescoping decoder**.
+- **Telescoping decoder**.
