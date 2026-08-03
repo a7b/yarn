@@ -66,7 +66,7 @@ arrays. Each directory has its own README with file conventions.
 One full 2-AOD syndrome-extraction cycle with 2 pairs of AODs for the [[150,30,10]] mitten code
 (C₅×S₃):
 
-https://github.com/user-attachments/assets/4e6d4538-9131-4461-92c4-2eb21a5c33f7
+https://github.com/user-attachments/assets/e844187e-8fb5-42e9-af6d-c1ea727fedb3
 
 ## AI Acknowledgment and Usage
 
