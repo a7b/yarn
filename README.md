@@ -63,6 +63,24 @@ arrays. Each directory has its own README with file conventions.
   syndrome-extraction cycles for the mitten and structured-mitten codes on
   atom-array layouts (2-AOD, and pipelined 4-AOD).
 
+## Syndrome extraction in action
+
+One full 2-AOD syndrome-extraction cycle for the [[150,30,10]] mitten code
+(C₅×S₃):
+
+<!-- GitHub only plays videos hosted as attachments. To activate the player:
+     edit this README on github.com, delete the placeholder line below, and
+     drag se_cycle_c150_d10_C5xS3_compressed.mp4 into the editor at that spot —
+     GitHub uploads it and inserts a https://github.com/user-attachments/...
+     URL, which must sit on its own line. -->
+
+video here
+
+Movies for all codes (2-AOD and pipelined 4-AOD) are in
+[`SE_cycle_movies/`](SE_cycle_movies/); each mp4 also plays directly in the
+browser when opened on GitHub, e.g.
+[this one](SE_cycle_movies/movies_2aod/mitten_codes/se_cycle_c150_d10_C5xS3.mp4).
+
 
 ## AI Acknowledgment and Usage
 
