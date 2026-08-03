@@ -3,9 +3,14 @@
 Reads the placements in `scq_hardware_layouts_HAL/placements/` and the check
 matrices in `processor_codes/mitten/`, and writes `assets/mitten_layouts.svg`.
 
-Only nearest-neighbour couplers (Manhattan distance <= 2 cells in the compact
-frame) are drawn — the long-range couplers are real but wash the interior into
-a flat grey at banner scale.
+Only couplers whose endpoints are within Manhattan distance 2 cells of each
+other in the compact frame are drawn (note this is endpoint separation, not
+HAL's `avg_coupler_length`, which measures routed path length):
+44% / 27% / 26% of the couplers in the three panels. The omitted ones are real
+and long-range (distances of 4, 5, 7, 8 and beyond) — every check has weight 9,
+so
+most of its couplers leave the 3x3 cluster entirely. They are left out only
+because drawing them at flat opacity washes the interior into a flat grey.
 
     python assets/make_banner.py
 """
@@ -29,9 +34,12 @@ GAP = 52.0
 PAD = 26.0
 LABEL_H = 32.0
 LEGEND_H = 26.0
-MAX_SPAN = 2         # cells; longer couplers are omitted
+MAX_DIST = 2         # cells; couplers reaching further are omitted
 R_DATA = 2.6
-S_CHK = 4.2
+S_CHK = 4.2          # X-check square, side
+S_DIA = 6.0          # Z-check diamond, full diagonal. Equal area to the square
+                     # needs S_CHK*sqrt(2) = 5.94; 6.0 keeps the points on whole
+                     # units (no rounding drift) at 102% of the square's area
 
 
 def _n(v):
@@ -80,7 +88,7 @@ def swatch(code, nkd, ox, oy):
         x1, y1 = cpos[r]
         x2, y2 = qpos[q]
         dx, dy = x2 - x1, y2 - y1
-        if (abs(dx) + abs(dy)) / CELL > MAX_SPAN:
+        if (abs(dx) + abs(dy)) / CELL > MAX_DIST:
             continue
         L = (dx * dx + dy * dy) ** 0.5 or 1.0
         bow = 0.18 * L * (1 if (e + r) % 2 == 0 else -1)
@@ -89,6 +97,7 @@ def swatch(code, nkd, ox, oy):
 
     circles, squares, diamonds = [], [], []
     h = S_CHK / 2.0
+    hd = S_DIA / 2.0
     for i in range(len(ni)):
         cx, cy = px[i], py[i]
         if isd[i]:
@@ -97,8 +106,8 @@ def swatch(code, nkd, ox, oy):
             squares.append(f'<rect x="{cx - h:.1f}" y="{cy - h:.1f}" '
                            f'width="{S_CHK}" height="{S_CHK}" rx="0.8"/>')
         else:
-            diamonds.append(f'<path d="M{_n(cx)} {cy - h:.1f}L{cx + h:.1f} {_n(cy)}'
-                            f'L{_n(cx)} {cy + h:.1f}L{cx - h:.1f} {_n(cy)}Z"/>')
+            diamonds.append(f'<path d="M{_n(cx)} {cy - hd:.1f}L{cx + hd:.1f} {_n(cy)}'
+                            f'L{_n(cx)} {cy + hd:.1f}L{cx - hd:.1f} {_n(cy)}Z"/>')
 
     nodes = (f'<g class="z">{"".join(diamonds)}</g>'
              f'<g class="x">{"".join(squares)}</g>'
@@ -131,15 +140,18 @@ def build(out):
         if kind == "d":
             mark = f'<g class="d"><circle cx="{cx:.0f}" cy="{cy:.0f}" r="{R_DATA}"/></g>'
         elif kind == "x":
-            mark = (f'<g class="x"><rect x="{cx - 2.1:.1f}" y="{cy - 2.1:.1f}" '
-                    f'width="4.2" height="4.2" rx="0.8"/></g>')
+            h = S_CHK / 2.0
+            mark = (f'<g class="x"><rect x="{cx - h:.1f}" y="{cy - h:.1f}" '
+                    f'width="{S_CHK}" height="{S_CHK}" rx="0.8"/></g>')
         else:
-            mark = (f'<g class="z"><path d="M{cx:.0f} {cy - 2.1:.1f}L{cx + 2.1:.1f} {cy:.0f}'
-                    f'L{cx:.0f} {cy + 2.1:.1f}L{cx - 2.1:.1f} {cy:.0f}Z"/></g>')
+            hd = S_DIA / 2.0
+            mark = (f'<g class="z"><path d="M{cx:.0f} {cy - hd:.1f}L{cx + hd:.1f} {cy:.0f}'
+                    f'L{cx:.0f} {cy + hd:.1f}L{cx - hd:.1f} {cy:.0f}Z"/></g>')
         legend.append(mark + f'<text class="key" x="{cx + 10:.0f}" y="{ly:.0f}">{text}</text>')
         lx += 15 + len(text) * 6.2 + 24
     legend.append(f'<text class="key dim" x="{W - PAD:.0f}" y="{ly:.0f}" text-anchor="end">'
-                  f'compact-frame HAL layouts &#183; nearest-neighbour couplers</text>')
+                  f'HAL layouts &#183; only couplers with Manhattan distance '
+                  f'&#8804;&#8202;2 cells (26&#8211;44% of all couplers)</text>')
 
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W:.0f} {H:.0f}" width="{W:.0f}" height="{H:.0f}" role="img" aria-label="Compact-frame chip layouts of three mitten codes, drawn as knitted swatches of increasing size: 150,30,10 then 500,100,16 then 975,195,24">
 <title>mitten code layouts</title>
