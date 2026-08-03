@@ -11,7 +11,7 @@
 
 <p align="center">
   <em>Three of the eight mitten codes, laid out on chip — data qubits and checks
-  tile the plane in $|G|$ three-by-three clusters.</em>
+  tile the plane in |G| three-by-three clusters.</em>
 </p>
 
 Code base for paper: upcoming
