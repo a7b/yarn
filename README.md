@@ -14,8 +14,6 @@
   tile the plane in |G| three-by-three clusters.</em>
 </p>
 
-Code base for paper: upcoming
-
 ## Repository structure
 
 ```
