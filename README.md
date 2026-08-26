@@ -4,7 +4,6 @@
   A toolkit for qLDPC processor discovery.
 </p>
 
-This repository accompanies the paper [*High-rate qLDPC processors*](https://arxiv.org/abs/2607.28795).
 
 <p align="center">
   <img src="assets/mitten_layouts.svg" width="100%"
@@ -16,7 +15,12 @@ This repository accompanies the paper [*High-rate qLDPC processors*](https://arx
   tile the plane in |G| three-by-three clusters.</em>
 </p>
 
+
+
 ## Repository structure
+
+This repository accompanies the paper [*High-rate qLDPC processors*](https://arxiv.org/abs/2607.28795).
+It is organized as follows:
 
 ```
 yarn/
