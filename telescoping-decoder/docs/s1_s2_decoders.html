@@ -64,7 +64,7 @@ nav.toc h2{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color
 nav.toc a{display:block; color:var(--ink-dim); padding:3px 0; border-left:2px solid transparent; padding-left:10px; margin-left:-10px}
 nav.toc a:hover{color:var(--accent); text-decoration:none}
 nav.toc a.sub{padding-left:24px; font-size:12.8px}
-main{flex:1 1 auto; min-width:0; padding:30px 42px 120px; max-width:none}
+main{flex:1 1 auto; min-width:0; padding:30px 42px 120px; max-width:calc(1800px - var(--tocw))}
 .inner{max-width:none}
 .prose{max-width:var(--max); margin:0 auto}
 
@@ -77,7 +77,7 @@ main{flex:1 1 auto; min-width:0; padding:30px 42px 120px; max-width:none}
 #toc-toggle:hover{border-color:var(--accent); color:var(--accent)}
 /* collapsed state: hide TOC, center the article */
 body.toc-hidden nav.toc{display:none}
-body.toc-hidden main{margin:0 auto}
+body.toc-hidden main{margin:0 auto; max-width:none}
 body.toc-hidden .code-guide-layout{
   max-width:calc(1420px + var(--tocw));
   grid-template-columns:minmax(460px,1fr) 26px minmax(560px,770px);
