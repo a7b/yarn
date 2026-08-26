@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "telescoping-decoder"
+version = "0.1.0"
+description = "Telescoping decoder for circuit-level QEC: GPU BP stages (S1, S2), CPU relay stages (S3-A/B/C), and exact IP certification (S4)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "a7b" }]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "stim>=1.12",
+    "gurobipy>=10.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+# S1/S2 are imported lazily, so CPU-only S3/S4 installations do not need
+# CuPy or any CUDA runtime packages. The ctk extra supplies CUDA 12 runtime
+# components on GPU machines without a compatible system toolkit.
+gpu = ["cupy-cuda12x[ctk]>=14.0"]
+
+[tool.setuptools.packages.find]
+include = ["telescoping_decoder*"]
+
+[tool.setuptools.package-data]
+"telescoping_decoder._c" = ["*.c"]
