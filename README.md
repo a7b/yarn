@@ -35,7 +35,8 @@ arrays. Each directory has its own README with file conventions.
 
 The `telescoping-decoder` package implements the staged decoding pipeline used
 to handle circuit-level quantum error correction, combining fast GPU decoding,
-CPU fallback stages, and a final exact integer-programming stage.
+CPU fallback stages, and a final exact integer-programming stage. A detailed explanation of 
+how we implemented the CUDA kernels for the GPU stages can be found [here.](telescoping-decoder/docs/s1_s2_decoders.html)
 
 ## Tooling
 
