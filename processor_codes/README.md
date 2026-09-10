@@ -114,7 +114,3 @@ panel entry in the movie. The explicit `gates` list is the ground truth.
 | `group` | `order`; `multiplication_table[a][b]` = number of `a·b`; `element_labels` (number → label, e.g. `x^2·r^2`; `<factor>_<i>` when a factor has no standard generator names). The table is GAP's: element `a` is `Elements(G)[a+1]` for `G := <gap_group_expression>`, and `multiplication_table[a][b] = Position(Elements(G), Elements(G)[a+1]*Elements(G)[b+1]) - 1`; every table was checked against a fresh GAP computation |
 | `ring_elements` | the lifted-product data: `a0`, `a1` (the two entries of A) and `b0`, `b1` (the two entries of B), each a list of element numbers |
 | `X_layers`, `Z_layers` | the X-check round and the Z-check round. `description` states the conventions. `order` is the schedule at a glance: one line per layer in execution order, e.g. `layer 0: X0→D1 L(x^2·r^2), X1→D2 L(x^2·r^2)` (check block → data block, and the L/R group element as printed in the movie's Hx/Hz panel). `layers` gives the same layers in full: each has `layer` (index) and `moves`, each move `check_block`, `data_block`, and `cz_gates` = the \|G\| pairs `[i, j]` = `[check row of Hx.npy or Hz.npy, data column]`, i.e. one CZ between check qubit `i` and data qubit `j` (so `[0, 19]` in an X layer means X check 0 is entangled with data qubit 19, and `Hx[0, 19] = 1`) |
-
-**Note on [[540,108,18]]**: its `Hx.npy`/`Hz.npy` store the same code with the two
-columns of A and B swapped (data blocks D1↔D4, D2↔D3 and the check blocks of each
-type swapped) relative to the movie and this schedule.
