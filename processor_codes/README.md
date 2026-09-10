@@ -13,12 +13,13 @@ processor_codes/
 │   └── [[n,k,d]]/
 │       ├── Hx.npy  Hz.npy  # X- and Z-type parity checks (0/1 matrices)
 │       ├── Lx.npy  Lz.npy  # paired logical bases: Lx · Lzᵀ = I_k
+│       ├── hook_free_SE_cycle_schedule.json   # gate-by-gate SE-cycle ordering
 │       └── gadgets/
 │           ├── X_seed.npz  Z_seed.npz   # single-logical X / Z measurement
 │           ├── XX.npz      ZZ.npz       # joint two-logical measurements
 │           ├── Y.npz                    # Y-logical measurement (non-CSS merge)
 │           └── full_extractor.npz       # extractor-augmented stabilizer spec
-├── structured_mitten/      # 6 codes, matrices only
+├── structured_mitten/      # 6 codes, matrices only (+ SE-cycle schedule for the 5 with movies)
 └── abelian_poly_LP/        # 1 code, matrices only
 ```
 
@@ -77,3 +78,43 @@ Files:
 - **`full_extractor.npz`** — the extractor-augmented stabilizer
   specification: single key `S`, symplectic `[X|Z]` convention (columns =
   2 × total qubits).
+
+## Hook-free SE-cycle schedule (`hook_free_SE_cycle_schedule.json`)
+
+Every code with a movie in `SE_cycle_movies/` (the 8 `mitten` codes and 5 of the
+`structured_mitten` codes) carries this file: the gate-by-gate order in which its
+check qubits are entangled with its data qubits during one syndrome-extraction
+(SE) cycle. It is the hook-free ordering the movies follow and the paper's SE-cycle
+times were computed for. All indices refer to the `Hx.npy`/`Hz.npy` in the same
+folder.
+
+**Structure.** With |G| the group order, the n = 5|G| data qubits form five blocks
+D1…D5 (columns `b·|G| … (b+1)·|G|-1` for block b = 0…4); the X checks form two
+blocks X0, X1 (rows `0…|G|-1` and `|G|…2|G|-1` of `Hx`), likewise Z0, Z1 in `Hz`.
+A **move** entangles one whole check block with one data block through one group
+element (|G| CZ gates at once); each check block makes 9 moves per cycle, three
+to each of its three data blocks. A **layer** is one global entangling pulse and
+carries the moves of the check blocks gating at that moment (one or two). An SE
+cycle consists of an **X-check round** and a **Z-check round** of 12 layers each;
+the order of those layers is what this file pins down.
+
+**Group-element rule** (same convention as the `L(·)`/`R(·)` cells of the Hx/Hz
+panels in the movies and the paper, `L(g): h ↦ g·h`, `R(g): h ↦ h·g⁻¹`): in a move
+with element `g`, data qubit `q` of the target block is gated by check `g·q`
+(action L) or by check `q·g⁻¹` (action R). Products come from the multiplication
+table in the file, so no external software is needed; the element label equals the
+panel entry in the movie. The explicit `gates` list is the ground truth.
+
+**Fields.**
+
+| field | meaning |
+|---|---|
+| `code` | `n, k, d`, `group`, `gap_group_expression` (defines the element numbering via GAP's `Elements(G)`), `group_order`, `movie_tag`, `lp_convention` (how Hx/Hz are built from A and B), paths of the two `movies` |
+| `qubit_indexing` | inclusive index ranges of D1…D5 (columns) and X0/X1, Z0/Z1 (rows) |
+| `group` | `order`; `multiplication_table[a][b]` = number of `a·b`; `element_labels` (number → label, e.g. `x^2·r^2`; `<factor>_<i>` when a factor has no standard generator names). The table is GAP's: element `a` is `Elements(G)[a+1]` for `G := <gap_group_expression>`, and `multiplication_table[a][b] = Position(Elements(G), Elements(G)[a+1]*Elements(G)[b+1]) - 1`; every table was checked against a fresh GAP computation |
+| `ring_elements` | the lifted-product data: `a0`, `a1` (the two entries of A) and `b0`, `b1` (the two entries of B), each a list of element numbers |
+| `X_layers`, `Z_layers` | the X-check round and the Z-check round. `description` states the conventions. `order` is the schedule at a glance: one line per layer in execution order, e.g. `layer 0: X0→D1 L(x^2·r^2), X1→D2 L(x^2·r^2)` (check block → data block, and the L/R group element as printed in the movie's Hx/Hz panel). `layers` gives the same layers in full: each has `layer` (index) and `moves`, each move `check_block`, `data_block`, and `cz_gates` = the \|G\| pairs `[i, j]` = `[check row of Hx.npy or Hz.npy, data column]`, i.e. one CZ between check qubit `i` and data qubit `j` (so `[0, 19]` in an X layer means X check 0 is entangled with data qubit 19, and `Hx[0, 19] = 1`) |
+
+**Note on [[540,108,18]]**: its `Hx.npy`/`Hz.npy` store the same code with the two
+columns of A and B swapped (data blocks D1↔D4, D2↔D3 and the check blocks of each
+type swapped) relative to the movie and this schedule.

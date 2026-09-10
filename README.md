@@ -26,7 +26,7 @@ It is organized as follows:
 yarn/
 ├── sqetch/                    # GPU distance estimator (pip-installable package)
 ├── code_search/               # LP CSS code search toolkit
-├── processor_codes/           # the finalized code suite: check matrices + gadgets
+├── processor_codes/           # the finalized code suite: check matrices + gadgets + hook free schedules
 ├── scq_hardware_layouts_HAL/  # superconducting chip layouts for the mitten codes
 ├── SE_cycle_movies/           # atom-array syndrome-extraction animations
 └── telescoping-decoder/       # staged circuit-level decoder with GPU and CPU stages
