@@ -85,7 +85,7 @@ how we implemented the CUDA kernels for the GPU stages can be found [here.](tele
 One full 2-AOD syndrome-extraction cycle with 2 pairs of AODs for the [[150,30,10]] mitten code
 (C₅×S₃):
 
-https://github.com/user-attachments/assets/e844187e-8fb5-42e9-af6d-c1ea727fedb3
+https://github.com/user-attachments/assets/455693cb-1e68-4e9d-8fdb-6ecff9780147
 
 ## AI Acknowledgment and Usage
 
