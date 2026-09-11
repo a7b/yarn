@@ -75,7 +75,12 @@ how we implemented the CUDA kernels for the GPU stages can be found [here.](tele
   [`scq_hardware_layouts_HAL/README.md`](scq_hardware_layouts_HAL/README.md).
 - **[`SE_cycle_movies/`](SE_cycle_movies/)** — animations of full
   syndrome-extraction cycles for the mitten and structured-mitten codes on
-  atom-array layouts (2-AOD, and pipelined 4-AOD).
+  atom-array layouts (2-AOD, and pipelined 4-AOD). The clock and all quoted
+  SE-cycle times are computed for the physical layout, in which the five data
+  blocks sit edge to edge on a 12 µm lattice; for readability the movies draw
+  each block on its own plate with a visual gap between plates (and parked
+  checks slightly further out), so moves that cross a block boundary appear
+  to cover more distance on screen than the atoms physically travel.
   
 One full 2-AOD syndrome-extraction cycle with 2 pairs of AODs for the [[150,30,10]] mitten code
 (C₅×S₃):
