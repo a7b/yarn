@@ -13,7 +13,7 @@
     "max_coupler_length": 1000,
     "route_edge_order": "sum_degrees_desc",
     "edge_expansion_val": 0,
-    "save": true,
+    "save": false,
     "verbose": false,
     "baseline_defaults": {
         "num_tiers": 1.0,
